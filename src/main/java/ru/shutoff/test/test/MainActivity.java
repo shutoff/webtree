@@ -3,7 +3,6 @@ package ru.shutoff.test.test;
 import android.app.Activity;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,12 +26,12 @@ import java.util.Vector;
 
 public class MainActivity extends Activity {
 
-    static final File DATADIR = new File(Environment.getExternalStorageDirectory(), "1");
-    static final String PREFIX = "file://" + DATADIR.toString() + "/";
-
     static final String ITEM = "item";
     static final String TITLE = "title";
     static final String FILE = "file";
+
+    File data_dir;
+    String prefix;
 
     Vector<Index> index;
 
@@ -44,12 +43,18 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        data_dir = new File(getIntent().getStringExtra("data"));
+        prefix = "file://" + data_dir.toString() + "/";
+
         setContentView(R.layout.activity_main);
         webView = (WebView) findViewById(R.id.content);
 
         WebSettings webSettings = webView.getSettings();
         webSettings.setPluginState(WebSettings.PluginState.ON);
         webSettings.setJavaScriptEnabled(true);
+        webSettings.setSupportZoom(true);
+        webSettings.setBuiltInZoomControls(true);
 
         webView.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -59,9 +64,9 @@ public class MainActivity extends Activity {
             }
         });
 
-        webView.loadUrl(PREFIX + "index.html");
+        webView.loadUrl(prefix + "index.html");
 
-        final File index_xml = new File(DATADIR, "index.xml");
+        final File index_xml = new File(data_dir, "index.xml");
         index = new Vector<Index>();
         try {
             XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
@@ -136,7 +141,7 @@ public class MainActivity extends Activity {
                 Index i = index.get(getTreePos(position));
                 String file = i.file;
                 if (file != null)
-                    webView.loadUrl(PREFIX + file);
+                    webView.loadUrl(prefix + file);
                 if (i.parent) {
                     i.open = !i.open;
                     BaseAdapter adapter = (BaseAdapter) listView.getAdapter();

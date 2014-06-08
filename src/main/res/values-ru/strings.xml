@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Test</string>
+    <string name="app_name">КОП</string>
     <string name="exit">Выход</string>
+    <string name="cancel">Отмена</string>
+    <string name="ok">Продолжить</string>
+    <string name="error">Ошибка</string>
+    <string name="no_kops">КОПы не найдены</string>
+    <string name="select_kop">Выберите KOP</string>
 
 </resources>

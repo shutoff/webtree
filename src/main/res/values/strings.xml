@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Test</string>
+    <string name="app_name">KOP</string>
     <string name="exit">Exit</string>
-
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="error">Error</string>
+    <string name="no_kops">Leassons not found</string>
+    <string name="select_kop">Select KOP</string>
 </resources>
