@@ -8,9 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -19,6 +16,9 @@ import android.widget.Toast;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
+import org.xwalk.core.XWalkNavigationHistory;
+import org.xwalk.core.XWalkUIClient;
+import org.xwalk.core.XWalkView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +35,7 @@ public class MainActivity extends Activity {
 
     Vector<Index> index;
 
-    WebView webView;
+    XWalkView webView;
     ListView listView;
 
     boolean force_exit;
@@ -48,23 +48,17 @@ public class MainActivity extends Activity {
         prefix = "file://" + data_dir.toString() + "/";
 
         setContentView(R.layout.activity_main);
-        webView = (WebView) findViewById(R.id.content);
+        webView = (XWalkView) findViewById(R.id.content);
 
-        WebSettings webSettings = webView.getSettings();
-        webSettings.setPluginState(WebSettings.PluginState.ON);
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setSupportZoom(true);
-        webSettings.setBuiltInZoomControls(true);
-
-        webView.setWebChromeClient(new WebChromeClient() {
+        webView.setUIClient(new XWalkUIClient(webView) {
             @Override
-            public void onReceivedTitle(WebView view, String title) {
+            public void onReceivedTitle(XWalkView view, String title) {
                 super.onReceivedTitle(view, title);
                 setTitle(title);
             }
         });
 
-        webView.loadUrl(prefix + "index.html");
+        webView.load(prefix + "index.html", null);
 
         final File index_xml = new File(data_dir, "index.xml");
         index = new Vector<Index>();
@@ -141,7 +135,7 @@ public class MainActivity extends Activity {
                 Index i = index.get(getTreePos(position));
                 String file = i.file;
                 if (file != null)
-                    webView.loadUrl(prefix + file);
+                    webView.load(prefix + file, null);
                 if (i.parent) {
                     i.open = !i.open;
                     BaseAdapter adapter = (BaseAdapter) listView.getAdapter();
@@ -180,8 +174,9 @@ public class MainActivity extends Activity {
 
     @Override
     public void finish() {
-        if (!force_exit && webView.canGoBack()) {
-            webView.goBack();
+        XWalkNavigationHistory history = webView.getNavigationHistory();
+        if (!force_exit && history.canGoBack()) {
+            history.navigate(XWalkNavigationHistory.Direction.BACKWARD, 1);
             return;
         }
         super.finish();
