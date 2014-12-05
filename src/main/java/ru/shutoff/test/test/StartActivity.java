@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.RadioButton;
 
@@ -30,6 +32,8 @@ public class StartActivity extends Activity {
     static final String TITLE = "title";
 
     Vector<KOP> kops;
+
+    int current;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,10 @@ public class StartActivity extends Activity {
             }
         });
         final ListView list = (ListView) dialog.findViewById(R.id.list);
+        final Button okButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+        okButton.setEnabled(false);
+        current = -1;
+
         list.setAdapter(new BaseAdapter() {
             @Override
             public int getCount() {
@@ -97,34 +105,46 @@ public class StartActivity extends Activity {
             }
 
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
+            public View getView(final int position, View convertView, ViewGroup parent) {
                 View v = convertView;
                 if (v == null)
                     v = inflater.inflate(R.layout.item, null);
                 RadioButton button = (RadioButton) v.findViewById(R.id.item);
+                button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        if (isChecked && (position != list.getSelectedItemPosition())) {
+                            current = position;
+                            BaseAdapter adapter = (BaseAdapter) list.getAdapter();
+                            adapter.notifyDataSetChanged();
+                            okButton.setEnabled(true);
+                        }
+                    }
+                });
                 button.setText(kops.get(position).name);
-                button.setChecked(position == list.getSelectedItemPosition());
+                button.setChecked(position == current);
                 return v;
             }
         });
         list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                current = position;
                 BaseAdapter adapter = (BaseAdapter) list.getAdapter();
                 adapter.notifyDataSetChanged();
+                okButton.setEnabled(true);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
         list.setSelection(0);
-        dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+        okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(StartActivity.this, MainActivity.class);
-                i.putExtra("data", kops.get(list.getSelectedItemPosition()).path);
+                i.putExtra("data", kops.get(current).path);
                 startActivity(i);
                 dialog.dismiss();
             }
