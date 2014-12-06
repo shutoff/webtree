@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Copyright 2013 The Chromium Authors. All rights reserved.
+
+     Use of this source code is governed by a BSD-style license that can be
+     found in the LICENSE file.
+-->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/select_action_menu_select_all"
+        android:alphabeticShortcut="a"
+        android:icon="?android:attr/actionModeSelectAllDrawable"
+        android:showAsAction="always|withText"
+        android:title="@android:string/selectAll" />
+    <item
+        android:id="@+id/select_action_menu_cut"
+        android:alphabeticShortcut="x"
+        android:icon="?android:attr/actionModeCutDrawable"
+        android:showAsAction="always|withText"
+        android:title="@android:string/cut" />
+    <item
+        android:id="@+id/select_action_menu_copy"
+        android:alphabeticShortcut="c"
+        android:icon="?android:attr/actionModeCopyDrawable"
+        android:showAsAction="always|withText"
+        android:title="@android:string/copy" />
+    <item
+        android:id="@+id/select_action_menu_paste"
+        android:alphabeticShortcut="v"
+        android:icon="?android:attr/actionModePasteDrawable"
+        android:showAsAction="always|withText"
+        android:title="@android:string/paste" />
+    <item
+        android:id="@+id/select_action_menu_share"
+        android:icon="@drawable/ic_menu_share_holo_light"
+        android:showAsAction="always|withText"
+        android:title="@string/actionbar_share" />
+    <item
+        android:id="@+id/select_action_menu_web_search"
+        android:icon="@drawable/ic_menu_search_holo_light"
+        android:showAsAction="always|withText"
+        android:title="@string/actionbar_web_search" />
+</menu>

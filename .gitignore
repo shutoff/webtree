@@ -1,7 +1,7 @@
-/.gradle
-/.idea
-/build
-/*.iml
-/*.apk
+.gradle
+.idea
+build
+*.iml
+*.apk
 local.properties
 android.js
