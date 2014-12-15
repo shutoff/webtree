@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:layout_weight="4">
 
-        <org.xwalk.core.XWalkView
+        <org.mozilla.gecko.GeckoView
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

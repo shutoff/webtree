@@ -14,11 +14,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.mozilla.gecko.GeckoView;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
-import org.xwalk.core.XWalkNavigationHistory;
-import org.xwalk.core.XWalkUIClient;
-import org.xwalk.core.XWalkView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +33,7 @@ public class MainActivity extends Activity {
 
     Vector<Index> index;
 
-    XWalkView webView;
+    GeckoView webView;
     ListView listView;
 
     boolean force_exit;
@@ -48,16 +46,36 @@ public class MainActivity extends Activity {
         prefix = "file://" + data_dir.toString() + "/";
 
         setContentView(R.layout.activity_main);
-        webView = (XWalkView) findViewById(R.id.content);
+        webView = (GeckoView) findViewById(R.id.content);
 
-        webView.setUIClient(new XWalkUIClient(webView) {
+        webView.setContentDelegate(new GeckoView.ContentDelegate() {
             @Override
-            public void onReceivedTitle(XWalkView view, String title) {
-                setTitle(title);
+            public void onPageStart(GeckoView geckoView, GeckoView.Browser browser, String s) {
+
+            }
+
+            @Override
+            public void onPageStop(GeckoView geckoView, GeckoView.Browser browser, boolean b) {
+
+            }
+
+            @Override
+            public void onPageShow(GeckoView geckoView, GeckoView.Browser browser) {
+
+            }
+
+            @Override
+            public void onReceivedTitle(GeckoView geckoView, GeckoView.Browser browser, String s) {
+                setTitle(s);
+            }
+
+            @Override
+            public void onReceivedFavicon(GeckoView geckoView, GeckoView.Browser browser, String s, int i) {
+
             }
         });
 
-        webView.load(prefix + "index.html", null);
+        webView.getCurrentBrowser().loadUrl(prefix + "index.html");
 
         final File index_xml = new File(data_dir, "index.xml");
         index = new Vector<Index>();
@@ -134,7 +152,7 @@ public class MainActivity extends Activity {
                 Index i = index.get(getTreePos(position));
                 String file = i.file;
                 if (file != null)
-                    webView.load(prefix + file, null);
+                    webView.getCurrentBrowser().loadUrl(prefix + file);
                 if (i.parent) {
                     i.open = !i.open;
                     BaseAdapter adapter = (BaseAdapter) listView.getAdapter();
@@ -173,11 +191,6 @@ public class MainActivity extends Activity {
 
     @Override
     public void finish() {
-        XWalkNavigationHistory history = webView.getNavigationHistory();
-        if (!force_exit && history.canGoBack()) {
-            history.navigate(XWalkNavigationHistory.Direction.BACKWARD, 1);
-            return;
-        }
         super.finish();
     }
 

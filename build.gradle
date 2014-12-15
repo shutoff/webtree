@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0-rc4'
+        classpath 'com.android.tools.build:gradle:1.0.0'
     }
 }
 
@@ -18,6 +18,11 @@ apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
+    maven {
+        url 'https://ci.mozilla.org/job/mozilla-central-geckoview/mozilla-central_Maven_Repository'
+    }
+
+
 }
 
 android {
@@ -31,9 +36,9 @@ android {
 }
 
 dependencies {
-    compile project(":crosswalk")
     compile 'com.android.support:support-v4:21.+'
     compile 'com.android.support:appcompat-v7:21.+'
+    compile 'org.mozilla.geckoview:library:+'
     compile fileTree(dir: 'libs', include: '*.jar')
 }
 
